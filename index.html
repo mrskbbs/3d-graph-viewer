@@ -3,9 +3,55 @@
     <head>
         <link rel = "stylesheet" href = "/index.css">
         <meta charset = "utf-8">
-        <title>Test</title> 
+        <title>graphy</title> 
     </head>
     <body>
+        <header>
+            <h1>graphy</h1>
+            <!-- Graph options -->
+            <div class = "vertical">
+                <p>Введите формулу:</p>
+                <label>
+                    f(x,y) = 
+                    <input id = "formula" type="text">
+                </label>
+            </div>
+            <div class = "vertical">
+                <label>
+                    Нижняя граница координат x/y
+                    <input id = "lowerbound" type = "number" value = "-10">
+                </label>
+                <label>
+                    Верхняя граница координат x/y
+                    <input id = "upperbound" type = "number" value = "10">
+                </label>
+            </div>
+            <button id = "display">Отобразить</button>
+            
+            <!-- Realtime options -->
+            <div class = "vertical">
+                <p>Настройки графика в реальном времени:</p>
+                <label>
+                    Точки по которому построен график
+                    <input id = "cloud" type = "checkbox">
+                </label>
+                <div class = "horizontal">
+                    <p>Плоскости</p>
+                    <label>
+                        XY
+                        <input id = "plane-xy" type="checkbox">
+                    </label>
+                    <label>
+                        XZ
+                        <input id = "plane-xz" type="checkbox">
+                    </label>
+                    <label>
+                        YZ
+                        <input id = "plane-yz" type="checkbox">
+                    </label>
+                </div>
+            </div>
+        </header>
         <div id = "renderer"></div>
         <script type = "module" src = "/main.js"></script>
     </body>
