@@ -1,7 +1,5 @@
 import * as th from 'three';
-import { FBXLoader, FontLoader, OrbitControls } from 'three/examples/jsm/Addons.js';
-import TextSprite from '@seregpie/three.text-sprite';
-import { LoopSubdivision } from 'three-subdivide';
+import {OrbitControls} from 'three/examples/jsm/Addons.js';
 import * as misc from './misc.js';
 
 //Display loop
@@ -40,15 +38,17 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
 //Plane setup
-const axes = new th.AxesHelper(Math.abs(misc.LOWERBOUND));
+const axes = new th.AxesHelper(5);
 let plane_xy = misc.planeXY();
 let plane_xz = misc.planeXZ();
 let plane_yz = misc.planeYZ();
 scene.add(axes);
 
-//Render graph
-let graph = misc.createGraph(scene);
-if(graph.mesh != null) scene.add(graph.mesh);
+//Init grapgh
+let graph = {
+    mesh: null,
+    cloud: null,
+};
 
 const DOM_renderer = document.querySelector("#renderer");
 DOM_renderer.appendChild(renderer.domElement);
@@ -101,6 +101,26 @@ checkbox_yz.addEventListener('change', function(){
     }
 });
 
+function clearPlanes(planes){
+    for(var plane of planes){
+        for(var el of plane){
+            el.geometry.dispose();
+            scene.remove(el);
+        }
+    }
+}
+function showPlanes(planes){
+    if(checkbox_xy.checked){
+        for(var el of plane_xy) scene.add(el);
+    }
+    if(checkbox_xz.checked){
+        for(var el of plane_xz) scene.add(el);
+    }
+    if(checkbox_yz.checked){
+        for(var el of plane_yz) scene.add(el);
+    }
+}
+
 //Display button
 const button_display = document.querySelector("#display");
 button_display.addEventListener("click", ()=>{
@@ -115,4 +135,9 @@ button_display.addEventListener("click", ()=>{
     graph = misc.createGraph(scene);
     scene.add(graph.mesh);
     if(checkbox_cloud.checked) scene.add(graph.cloud);
+    clearPlanes([plane_xy, plane_xz, plane_yz]);
+    plane_xy = misc.planeXY();
+    plane_xz = misc.planeXZ();
+    plane_yz = misc.planeYZ();
+    showPlanes();
 });

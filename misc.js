@@ -1,5 +1,4 @@
 import * as th from 'three';
-import { LoopSubdivision } from 'three-subdivide';
 import TextSprite from '@seregpie/three.text-sprite';
 
 //Materials
@@ -32,31 +31,33 @@ const FORMULADICT = {
     "cot": "Math.cot",
     "ln": "Math.log",
 };
-export let LOWERBOUND = -5; //USER GET
-export let UPPERBOUND = 5; //USER GET
-export let ROW = 0;
-export let TOTAL = 0;
+//Default params
+export let LOWERBOUND = -10; 
+export let UPPERBOUND = 10; 
 
 //Display planes
 export function planeXY(){
     const arr = [];
     for(var i = LOWERBOUND; i < UPPERBOUND+1; i++){
         const points = [];
+        const points1 = [];
+
         points.push( new th.Vector3( LOWERBOUND, i, 0 ) );
         points.push( new th.Vector3( UPPERBOUND, i, 0 ) );
+        points1.push( new th.Vector3( i, LOWERBOUND, 0 ) );
+        points1.push( new th.Vector3( i, UPPERBOUND, 0 ) );
+        
         const linesGeometry = new th.BufferGeometry().setFromPoints(points);
+        const linesGeometry1 = new th.BufferGeometry().setFromPoints(points1);
         const line = new th.Line(
             linesGeometry,
             coordsmaterial,
         );
-        line.frustumCulled = false;
-
-        const linesGeometry1 = new th.BufferGeometry().setFromPoints(points);  
-        linesGeometry1.rotateZ(Math.PI/2);      
         const line1 = new th.Line(
             linesGeometry1,
             coordsmaterial,
         );
+        line.frustumCulled = false;
         line1.frustumCulled = false;
         arr.push(line);
         arr.push(line1);
@@ -67,21 +68,24 @@ export function planeXZ(){
     const arr = [];
     for(var i = LOWERBOUND; i < UPPERBOUND+1; i++){
         const points = [];
-        points.push( new th.Vector3( LOWERBOUND, 0, i ) );
-        points.push( new th.Vector3( UPPERBOUND, 0, i ) );
+        const points1 = [];
+
+        points.push(new th.Vector3(LOWERBOUND, 0, i));
+        points.push(new th.Vector3(UPPERBOUND, 0, i));
+        points1.push(new th.Vector3(i, 0, LOWERBOUND));
+        points1.push(new th.Vector3(i, 0, UPPERBOUND));
+        
         const linesGeometry = new th.BufferGeometry().setFromPoints(points);
+        const linesGeometry1 = new th.BufferGeometry().setFromPoints(points1);
         const line = new th.Line(
             linesGeometry,
             coordsmaterial,
         );
-        line.frustumCulled = false;
-
-        const linesGeometry1 = new th.BufferGeometry().setFromPoints(points);  
-        linesGeometry1.rotateY(Math.PI/2);      
         const line1 = new th.Line(
             linesGeometry1,
             coordsmaterial,
         );
+        line.frustumCulled = false;
         line1.frustumCulled = false;
         arr.push(line);
         arr.push(line1);
@@ -92,21 +96,24 @@ export function planeYZ(){
     const arr = [];
     for(var i = LOWERBOUND; i < UPPERBOUND+1; i++){
         const points = [];
+        const points1 = [];
+
         points.push(new th.Vector3(0, LOWERBOUND, i));
         points.push(new th.Vector3(0, UPPERBOUND, i));
+        points1.push(new th.Vector3(0, i, LOWERBOUND));
+        points1.push(new th.Vector3(0, i, UPPERBOUND));
+        
         const linesGeometry = new th.BufferGeometry().setFromPoints(points);
+        const linesGeometry1 = new th.BufferGeometry().setFromPoints(points1);
         const line = new th.Line(
             linesGeometry,
             coordsmaterial,
         );
-        line.frustumCulled = false;
-
-        const linesGeometry1 = new th.BufferGeometry().setFromPoints(points);  
-        linesGeometry1.rotateX(Math.PI/2);      
         const line1 = new th.Line(
             linesGeometry1,
             coordsmaterial,
         );
+        line.frustumCulled = false;
         line1.frustumCulled = false;
         arr.push(line);
         arr.push(line1);
@@ -129,6 +136,7 @@ function displayIndices(scene, index, vec){
     scene.add(l);
 }
 
+//Parse formula and edit it to suit JS syntax
 function parseFormula(){
     let input = document.querySelector("#formula").value.toLowerCase();
     //Easy parsing
@@ -138,10 +146,27 @@ function parseFormula(){
     return input
 }
 
-export function createGraph(scene){
+//Parse lower and upper bounds for coords
+function parseLowerUpperBounds(){
+    let lower = Number(document.querySelector("#lower").value);
+    let upper = Number(document.querySelector("#upper").value);
+
+    if(lower >= upper){
+        alert("Неверно введены границы!");
+        return;
+    }
+
+    LOWERBOUND = lower;
+    UPPERBOUND = upper;
+}
+
+//Create graph mesh and points cloud
+export function createGraph(){
     const points = [];
     const indices = [];
-    
+    parseLowerUpperBounds();
+    let TOTAL = 0;
+    let ROW = 0;
     //Calculates point coordinates depending on the given function
     for(var y = LOWERBOUND; y < UPPERBOUND; y++){
         ROW = 0;
@@ -164,23 +189,11 @@ export function createGraph(scene){
             }
             if(z != NaN){
                 points.push(x,y,z);
-                // const l = new TextSprite({
-                //     text: `${TOTAL}`,
-                //     fontFamily: 'Arial, Helvetica, sans-serif',
-                //     fontSize: .3,
-                //     position: ((new th.Vector3(x,y,z)).normalize().toArray()),
-                //     color: '#ffbbff',
-                // });
-                // l.position.x = x;
-                // l.position.y = y;
-                // l.position.z = z;
-                // scene.add(l);
                 TOTAL++;
                 ROW++;
             }
         }
     }
-
     //Builds triangle indices order from cloud of points
     for(var y = 0; y < (TOTAL/(ROW))-1; y++){
         for(var x = 0; x < ROW-1; x++){
@@ -199,7 +212,6 @@ export function createGraph(scene){
     // Create mesh and clouds
     const mesh = new th.Mesh(geometry, normalmaterial);
     const cloud = new th.Points(geometry, pointsmaterial);
-
     return {
         mesh: mesh,
         cloud: cloud,
