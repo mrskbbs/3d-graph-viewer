@@ -1,4 +1,9 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("./fonts/Roboto.ttf");
+}
 body{
+    font-family: "Roboto";
     margin: 0em;
     /* width: 100%; */
     display: flex;
@@ -20,6 +25,7 @@ header{
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    gap: .5em;
 }
 .horizontal{
     display: flex;
@@ -27,4 +33,42 @@ header{
     align-items: center;
     justify-content: space-around;
     gap: 0.5em;
+}
+button{
+    color: white;
+    border: .1em solid white;
+    outline: 0;
+    padding: .5em;
+    border-radius: .5em;
+    background: rgba(0, 0, 0, 0);
+    transition: .5s;
+}
+button:hover{
+    color: rgb(118, 175, 208);
+    border-color:rgb(118, 175, 208);
+}
+input{
+    font-family: "Roboto";
+    color: white;
+    border: .1em solid white;
+    outline: 0;
+    border-radius: .25em;
+    background-color: rgba(0, 0, 0, 0);
+    transition: .5s;
+}
+input:focus{
+    color: rgb(118, 175, 208);
+    border-color: rgb(118, 175, 208);
+}
+input[type="number"]{
+    -moz-appearance: textfield;
+}
+input[type="number"]:hover{
+    -moz-appearance: textfield;
+}
+#graph-options{
+    color: white;
+    position: absolute;
+    left: 2em;
+    bottom: 2em;
 }

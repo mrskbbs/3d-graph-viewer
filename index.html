@@ -8,29 +8,9 @@
     <body>
         <header>
             <h1>graphy</h1>
-            <!-- Graph options -->
-            <div class = "vertical">
-                <p>Введите формулу:</p>
-                <label>
-                    f(x,y) = 
-                    <input id = "formula" type="text">
-                </label>
-            </div>
-            <div class = "vertical">
-                <label>
-                    Нижняя граница координат x/y
-                    <input id = "lower" type = "number" value = "-10">
-                </label>
-                <label>
-                    Верхняя граница координат x/y
-                    <input id = "upper" type = "number" value = "10">
-                </label>
-            </div>
-            <button id = "display">Отобразить</button>
             
             <!-- Realtime options -->
             <div class = "vertical">
-                <p>Настройки графика в реальном времени:</p>
                 <label>
                     Точки по которому построен график
                     <input id = "cloud" type = "checkbox">
@@ -52,6 +32,26 @@
                 </div>
             </div>
         </header>
+        <div id = "graph-options">
+            <!-- Graph options -->
+            <div class = "vertical">
+                <label>
+                    Введите формулу f(x,y) = 
+                    <input id = "formula" type="text">
+                </label>
+                <div class = "vertical">
+                    <label>
+                        Нижняя граница координат x/y
+                        <input id = "lower" type = "number" value = "-10">
+                    </label>
+                    <label>
+                        Верхняя граница координат x/y
+                        <input id = "upper" type = "number" value = "10">
+                    </label>
+                </div>
+                <button id = "display">Отобразить</button>
+            </div>
+        </div>
         <div id = "renderer"></div>
         <script type = "module" src = "/main.js"></script>
     </body>
