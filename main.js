@@ -1,11 +1,29 @@
 import * as th from 'three';
 import {OrbitControls} from 'three/examples/jsm/Addons.js';
-import * as misc from './misc.js';
+import { Graph } from './graph.js';
+import { Plane } from './plane.js';
 
 //Display loop
 function animate(){
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
+}
+//Plane functions
+function hidePlanes(){
+    plane_xy.hide();
+    plane_xz.hide();
+    plane_yz.hide();
+}
+function showPlanes(){
+    if(plane_xy.isChecked()){
+        plane_xy.show();
+    }
+    if(plane_xz.isChecked()){
+        plane_xz.show();
+    }
+    if(plane_yz.isChecked()){
+        plane_yz.show();
+    }
 }
 
 const WIDTH = window.innerWidth;
@@ -26,7 +44,6 @@ camera.position.z = 10;
 camera.rotateY(Math.PI/3);
 camera.rotateX(Math.PI/3);
 
-
 //Renderer setup
 const renderer = new th.WebGLRenderer();
 renderer.shadowMap.enabled = true;
@@ -39,105 +56,30 @@ controls.enableDamping = true;
 
 //Plane setup
 const axes = new th.AxesHelper(5);
-let plane_xy = misc.planeXY();
-let plane_xz = misc.planeXZ();
-let plane_yz = misc.planeYZ();
+let plane_xy = new Plane(scene, "xy");
+let plane_xz = new Plane(scene, "xz");
+let plane_yz = new Plane(scene, "yz");
+showPlanes();
 scene.add(axes);
 
 //Init grapgh
-let graph = {
-    mesh: null,
-    cloud: null,
-};
+let graph = new Graph(scene);
+graph.showMesh();
 
 const DOM_renderer = document.querySelector("#renderer");
 DOM_renderer.appendChild(renderer.domElement);
 animate(scene, camera, renderer);
 
-
-//Checkboxes
-const checkbox_cloud = document.querySelector("#cloud");
-checkbox_cloud.addEventListener('change', function(){
-    if(this.checked){
-        scene.add(graph.cloud);
-    }else{
-        scene.remove(graph.cloud);
-    }
-});
-const checkbox_xy = document.querySelector("#plane-xy");
-checkbox_xy.addEventListener('change', function(){
-    if(this.checked){
-        for(var el of plane_xy){
-            scene.add(el);
-        }
-    }else{
-        for(var el of plane_xy){
-            scene.remove(el);
-        }
-    }
-});
-const checkbox_xz = document.querySelector("#plane-xz");
-checkbox_xz.addEventListener('change', function(){
-    if(this.checked){
-        for(var el of plane_xz){
-            scene.add(el);
-        }
-    }else{
-        for(var el of plane_xz){
-            scene.remove(el);
-        }
-    }
-});
-const checkbox_yz = document.querySelector("#plane-yz");
-checkbox_yz.addEventListener('change', function(){
-    if(this.checked){
-        for(var el of plane_yz){
-            scene.add(el);
-        }
-    }else{
-        for(var el of plane_yz){
-            scene.remove(el);
-        }
-    }
-});
-
-function clearPlanes(planes){
-    for(var plane of planes){
-        for(var el of plane){
-            el.geometry.dispose();
-            scene.remove(el);
-        }
-    }
-}
-function showPlanes(planes){
-    if(checkbox_xy.checked){
-        for(var el of plane_xy) scene.add(el);
-    }
-    if(checkbox_xz.checked){
-        for(var el of plane_xz) scene.add(el);
-    }
-    if(checkbox_yz.checked){
-        for(var el of plane_yz) scene.add(el);
-    }
-}
-
 //Display button
 const button_display = document.querySelector("#display");
 button_display.addEventListener("click", ()=>{
-    if(graph.mesh != null){
-        graph.mesh.geometry.dispose();
-        scene.remove(graph.mesh);
-    }
-    if(checkbox_cloud.checked && graph.cloud != null){
-        graph.cloud.geometry.dispose();
-        scene.remove(graph.cloud)
-    };
-    graph = misc.createGraph(scene);
-    scene.add(graph.mesh);
-    if(checkbox_cloud.checked) scene.add(graph.cloud);
-    clearPlanes([plane_xy, plane_xz, plane_yz]);
-    plane_xy = misc.planeXY();
-    plane_xz = misc.planeXZ();
-    plane_yz = misc.planeYZ();
+    graph.del();
+    graph = new Graph(scene);
+    graph.showMesh();
+    if(graph.isCloudVisible()) graph.showCloud();
+    hidePlanes();
+    plane_xy = new Plane(scene, "xy");
+    plane_xz = new Plane(scene, "xz");
+    plane_yz = new Plane(scene, "yz");
     showPlanes();
 });

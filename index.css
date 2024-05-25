@@ -3,6 +3,7 @@
     src: url("./fonts/Roboto.ttf");
 }
 body{
+    user-select: none;
     font-family: "Roboto";
     margin: 0em;
     /* width: 100%; */
@@ -17,7 +18,7 @@ header{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     gap: 5em;
 }
 .vertical{
@@ -47,6 +48,9 @@ button:hover{
     color: rgb(118, 175, 208);
     border-color:rgb(118, 175, 208);
 }
+button:active{
+    background-color: rgba(118, 175, 208, 80%)
+}
 input{
     font-family: "Roboto";
     color: white;
@@ -55,6 +59,12 @@ input{
     border-radius: .25em;
     background-color: rgba(0, 0, 0, 0);
     transition: .5s;
+}
+label{
+    transition: .5s;
+}
+label:hover{
+    color: rgb(118, 175, 208);
 }
 input:focus{
     color: rgb(118, 175, 208);
