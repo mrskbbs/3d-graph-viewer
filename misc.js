@@ -45,3 +45,18 @@ export function parseLowerUpperBounds(){
         upper: upper,
     }
 }
+
+export function elementBuilder(tag, options){
+    const el = document.createElement(tag);
+    for(const [key, val] of Object.entries(options)){
+        el.setAttribute(key, val);
+    }
+    return el;
+}
+
+export function materialBuilder(val){
+    return new th.MeshPhysicalMaterial({
+        color: val,
+        side: th.DoubleSide,
+    });
+}

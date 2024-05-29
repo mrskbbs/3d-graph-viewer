@@ -62,24 +62,22 @@ let plane_yz = new Plane(scene, "yz");
 showPlanes();
 scene.add(axes);
 
+const ambient_light = new th.AmbientLight("#919191"); 
+scene.add( ambient_light );
+
+const directonal_light = new th.DirectionalLight(0xffffff, .6);
+directonal_light.position.z = 20;
+scene.add(directonal_light);
+
 //Init grapgh
-let graph = new Graph(scene);
-graph.showMesh();
+let graph = undefined;
 
 const DOM_renderer = document.querySelector("#renderer");
 DOM_renderer.appendChild(renderer.domElement);
 animate(scene, camera, renderer);
 
 //Display button
-const button_display = document.querySelector("#display");
+const button_display = document.querySelector("#add");
 button_display.addEventListener("click", ()=>{
-    graph.del();
     graph = new Graph(scene);
-    graph.showMesh();
-    if(graph.isCloudVisible()) graph.showCloud();
-    hidePlanes();
-    plane_xy = new Plane(scene, "xy");
-    plane_xz = new Plane(scene, "xz");
-    plane_yz = new Plane(scene, "yz");
-    showPlanes();
 });

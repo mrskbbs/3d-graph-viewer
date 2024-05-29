@@ -6,32 +6,8 @@
         <title>graphy</title> 
     </head>
     <body>
-        <header>
-            <h1>graphy</h1>
-            
-            <!-- Realtime options -->
-            <div class = "vertical">
-                <label>
-                    Точки по которому построен график
-                    <input id = "cloud" type = "checkbox">
-                </label>
-                <div class = "horizontal">
-                    <p>Плоскости: </p>
-                    <label>
-                        XY
-                        <input id = "plane-xy" type="checkbox">
-                    </label>
-                    <label>
-                        XZ
-                        <input id = "plane-xz" type="checkbox">
-                    </label>
-                    <label>
-                        YZ
-                        <input id = "plane-yz" type="checkbox">
-                    </label>
-                </div>
-            </div>
-        </header>
+        <div id = "sidebar">
+        </div>
         <div id = "graph-options">
             <!-- Graph options -->
             <div class = "vertical">
@@ -49,7 +25,22 @@
                         <input id = "upper" type = "number" value = "10">
                     </label>
                 </div>
-                <button id = "display">Отобразить</button>
+                <button id = "add">Добавить</button>
+                <div class = "horizontal">
+                    <p>Плоскости: </p>
+                    <label>
+                        XY
+                        <input id = "plane-xy" type="checkbox">
+                    </label>
+                    <label>
+                        XZ
+                        <input id = "plane-xz" type="checkbox">
+                    </label>
+                    <label>
+                        YZ
+                        <input id = "plane-yz" type="checkbox">
+                    </label>
+                </div>
             </div>
         </div>
         <div id = "renderer"></div>

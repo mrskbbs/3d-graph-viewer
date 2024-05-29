@@ -5,7 +5,9 @@ export class Graph{
     #mesh;
     #cloud;
     #scene;
-    #checkbox;
+    #card;
+    #cloud_checkbox;
+    #mesh_checkbox;
     //Parse formula and edit it to suit JS syntax
     #parseFormula(){
         let input = document.querySelector("#formula").value.toLowerCase();
@@ -25,16 +27,93 @@ export class Graph{
         
         return input;
     }
-    constructor(scene){
-        this.#scene = scene;
-        this.#checkbox = document.querySelector("#cloud");
-        this.#checkbox.addEventListener('change', (el) => {
-            if(el.currentTarget.checked){
-                this.showCloud();
+
+    #addToSideBar(){
+        const card = misc.elementBuilder(
+            "div",
+            {"class": "graph-controls", }
+        );
+        const delete_button = document.createElement("button");
+        delete_button.innerText = "Удалить";
+        delete_button.onclick = () => {
+            this.del();
+        }
+ 
+
+        const mesh_checkbox = misc.elementBuilder(
+            "input",
+            {"type": "checkbox", "checked" : "true"}
+        );
+        const mesh_label = document.createElement("label");
+        mesh_label.appendChild(mesh_checkbox);
+        mesh_label.addEventListener('change', (el) => {
+            if(el.target.checked){
+                this.showMesh();
+                this.#mesh_checkbox = true;
             }else{
-                this.hideCloud();
+                this.hideMesh();
+                this.#mesh_checkbox = false;
             }
         });
+        mesh_label.innerHTML += "Показать граф";
+        this.#mesh_checkbox = true;
+
+
+        const cloud_checkbox = misc.elementBuilder(
+            "input",
+            {"type": "checkbox"}
+        );
+        const cloud_label = document.createElement("label");
+        cloud_label.appendChild(cloud_checkbox);
+        cloud_label.addEventListener('change', (el) => {
+            if(el.target.checked){
+                if(this.#mesh_checkbox) this.showCloud();
+                this.#cloud_checkbox = true;
+            }else{
+                if(this.#mesh_checkbox) this.hideCloud();
+                this.#cloud_checkbox = false;
+            }
+        });
+        cloud_label.innerHTML += "Показать точки";
+        this.#cloud_checkbox = false;
+
+        const colorpicker = misc.elementBuilder(
+            "input",
+            {"type": "color"},
+        )
+        colorpicker.value = "#FFFFFF";
+        colorpicker.addEventListener("change", (el) => {
+            this.#mesh.material = new th.MeshPhysicalMaterial({
+                color: el.currentTarget.value,
+                side: th.DoubleSide,
+            });
+            this.#cloud.material = new th.PointsMaterial({
+                color: el.currentTarget.value,
+                size: 5,
+                sizeAttenuation: false,
+            });
+        });
+
+
+        const container = misc.elementBuilder(
+            "div",
+            {"class": "vertical"}
+        );
+        container.appendChild(mesh_label);
+        container.appendChild(cloud_label);
+
+
+        card.appendChild(delete_button);
+        card.appendChild(container);
+        card.appendChild(colorpicker);
+
+        this.#card = card;
+    }
+
+    constructor(scene){
+        this.#scene = scene;
+        this.#addToSideBar();
+        document.querySelector("#sidebar").appendChild(this.#card);
 
         const bounds = misc.parseLowerUpperBounds();
         const points = [];
@@ -76,17 +155,36 @@ export class Graph{
         this.#geometry.computeVertexNormals();
     
         // Create mesh and clouds
-        this.#mesh = new th.Mesh(this.#geometry, misc.normalmaterial);
-        this.#cloud = new th.Points(this.#geometry, misc.pointsmaterial);
+        this.#mesh = new th.Mesh(
+            this.#geometry, 
+            new th.MeshPhysicalMaterial({
+                color: "#FFFFFF",
+                side: th.DoubleSide,
+            })
+        );
+        this.#cloud = new th.Points(
+            this.#geometry,
+            new th.PointsMaterial({
+                color: "#FFFFFF",
+                size: 5,
+                sizeAttenuation: false,
+            }) 
+        );
+        this.showMesh();
+    }
+    isMeshVisible(){
+        return this.#mesh_checkbox;
     }
     isCloudVisible(){
-        return this.#checkbox.checked;
+        return this.#mesh_checkbox && this.#cloud_checkbox;
     }
     showMesh(){
         this.#scene.add(this.#mesh);
+        if(this.#cloud_checkbox) this.showCloud();
     }
     hideMesh(){
         this.#scene.remove(this.#mesh);
+        if(this.#cloud_checkbox) this.hideCloud();
     }
     showCloud(){
         this.#scene.add(this.#cloud);
@@ -95,13 +193,12 @@ export class Graph{
         this.#scene.remove(this.#cloud)
     }
     del(){
-        if(this.#mesh != null){
-            this.#mesh.geometry.dispose();
-            this.#scene.remove(this.#mesh);
-        }
-        if(this.#checkbox.checked && this.#cloud != null){
-            this.#cloud.geometry.dispose();
-            this.#scene.remove(this.#cloud);
-        }
+        this.#mesh.geometry.dispose();
+        this.#scene.remove(this.#mesh);
+        
+        this.#cloud.geometry.dispose();
+        this.#scene.remove(this.#cloud);
+
+        this.#card.remove();
     }
 }
