@@ -82,8 +82,15 @@ input[type="number"]:hover{
     z-index: 1;
     color: white;
     position: absolute;
-    right: 2em;
-    bottom: 2em;
+    width: 20%;
+    right: 0.5em;
+    bottom: 0em;
+}
+#graph-options label{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 .graph-controls{
     display: flex;
@@ -92,7 +99,12 @@ input[type="number"]:hover{
     justify-content: center;
     gap: 1.5em;
     padding: 1.5em;
-    border-bottom: 1px white solid;
+    border: 0.01em white solid;
+    border-radius: 0.5em;
+    transition: .5s;
+}
+.graph-controls:hover{
+    border-color: rgb(118, 175, 208);
 }
 .graph-controls input[type="color"]{
     width: 1.5em;
@@ -102,7 +114,7 @@ input[type="number"]:hover{
     z-index: 1;
     top: 0em;
     left: 0em;
-    width: 22.5%;
+    min-width: 15%;
     height: 90vh;
     background-color: rgba(0, 0, 0, 0);
     display: flex;
@@ -113,6 +125,8 @@ input[type="number"]:hover{
     scrollbar-color: white rgba(0, 0, 0, 0%);
     gap: 2em;
     padding: 2em;
+    font-size: small;
+    transition: 1.5s;
 }
 #renderer{
     z-index: 0;

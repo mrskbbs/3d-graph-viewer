@@ -8,12 +8,7 @@ function animate(){
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
-//Plane functions
-function hidePlanes(){
-    plane_xy.hide();
-    plane_xz.hide();
-    plane_yz.hide();
-}
+
 function showPlanes(){
     if(plane_xy.isChecked()){
         plane_xy.show();
@@ -75,6 +70,16 @@ let graph = undefined;
 const DOM_renderer = document.querySelector("#renderer");
 DOM_renderer.appendChild(renderer.domElement);
 animate(scene, camera, renderer);
+
+document.querySelector("#domain").addEventListener("change", () => {
+    plane_xy.del();
+    plane_xy = new Plane(scene, "xy");
+    plane_xz.del();
+    plane_xz = new Plane(scene, "xz");
+    plane_yz.del();
+    plane_yz = new Plane(scene, "yz");
+    showPlanes();
+});
 
 //Display button
 const button_display = document.querySelector("#add");

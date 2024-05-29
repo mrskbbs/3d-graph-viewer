@@ -1,17 +1,19 @@
 import * as th from 'three';
 import * as misc from './misc.js';
 export class Graph{
-    #geometry;
-    #mesh;
-    #cloud;
     #scene;
-    #card;
-    #cloud_checkbox;
-    #mesh_checkbox;
-    //Parse formula and edit it to suit JS syntax
-    #parseFormula(){
-        let input = document.querySelector("#formula").value.toLowerCase();
+    #geometry;
 
+    #mesh;
+    #mesh_checkbox;
+    
+    #cloud;
+    #cloud_checkbox;
+    
+    #card;
+
+    //Parse formula and edit it to suit JS syntax
+    #parseFormula(input){
         for(var [key, val] of Object.entries(misc.FORMULADICT)){
            input = input.replaceAll(key, val);
         }
@@ -108,45 +110,86 @@ export class Graph{
         card.appendChild(colorpicker);
 
         this.#card = card;
+        document.querySelector("#sidebar").appendChild(this.#card);
     }
 
     constructor(scene){
         this.#scene = scene;
-        this.#addToSideBar();
-        document.querySelector("#sidebar").appendChild(this.#card);
 
-        const bounds = misc.parseLowerUpperBounds();
-        const points = [];
-        const indices = [];
-        const ROW = bounds.upper - bounds.lower;
-        const TOTAL = ROW*ROW;
-
-        var x = 0, y = 0, z = 0;
-
-        var formula = this.#parseFormula();
-        if(formula == null){
+        //Formula parsing logic
+        var formula_raw = document.querySelector("#formula").value.trim().toLowerCase();
+        var formula = this.#parseFormula(formula_raw);
+        if(formula == null || formula == ""){
             this.#mesh = null;
             this.#cloud = null;
             this.#geometry = null;
-            return;
         }
-       
+        
+        const bounds = misc.parseBounds();
+        const points = [];
+        const points_raw = [];
+        const indices = [];
+        var ROW = (bounds.upper+1) - bounds.lower;
+        var TOTAL = ROW*ROW;
+        var x = 0, y = 0, z = 0;
+
+        
+        //Display the card
+        this.#addToSideBar();
+        const p = document.createElement("p");
+        p.innerHTML = document.querySelector("#formula").value.toLowerCase();
+        this.#card.appendChild(p);
+
         //Calculates point coordinates depending on the given function
-        for(var y = bounds.lower; y < bounds.upper; y++){
-            for(var x = bounds.lower; x < bounds.upper; x++){
+        for(var y = bounds.lower; y <= bounds.upper; y++){
+            for(var x = bounds.lower; x <= bounds.upper; x++){
                 z = eval(formula);
-                if(z != NaN) points.push(x,y,z);
+                if(z > bounds.upper ){
+                    points.push([x,y, bounds.upper]);
+                    points_raw.push(x,y, bounds.upper);
+                    continue;
+                } 
+                if(z < bounds.lower){
+                    points.push([x,y, bounds.lower]);
+                    points_raw.push(x,y, bounds.lower);
+                    continue;
+                }
+                if(z != NaN){
+                    points.push([x,y,z]);
+                    points_raw.push(x,y,z);
+                }
             }
         }
-      
+
         //Builds triangle indices order from cloud of points
         for(var y = 0; y < (TOTAL/(ROW))-1; y++){
             for(var x = 0; x < ROW-1; x++){
-                indices.push(x + y*ROW, x+1 + y*ROW, x + (y+1)*ROW);
-                indices.push(x + (y+1)*ROW, x+1 + y*ROW, x+1 + (y+1)*ROW);
+                //Indicies
+                var cur = x + (y*ROW);
+                var clm = cur + 1;
+                var row = x + ((y+1)*ROW);
+                
+                const isOverBounds = (ind) =>{
+                    return Math.abs(points[ind][2]) == bounds.upper;
+                }
+                
+                //Triangle check
+                if((isOverBounds(cur) + isOverBounds(clm) + isOverBounds(row)) < 3){
+                    indices.push(cur, clm, row);
+                }
+
+                //Recalculate for 2nd triangle
+                cur = (x + 1) + ((y+1)*ROW);
+                clm = cur - 1;
+                row = (x + 1) + (y*ROW);
+
+                //Triangle check
+                if((isOverBounds(cur) + isOverBounds(clm) + isOverBounds(row)) < 3){
+                    indices.push(cur, clm, row);
+                }
             }
-        }    
-        const vertices = new Float32Array(points);
+        }     
+        const vertices = new Float32Array(points_raw);
     
         //Geometry creation from vertices
         this.#geometry = new th.BufferGeometry();
@@ -172,12 +215,7 @@ export class Graph{
         );
         this.showMesh();
     }
-    isMeshVisible(){
-        return this.#mesh_checkbox;
-    }
-    isCloudVisible(){
-        return this.#mesh_checkbox && this.#cloud_checkbox;
-    }
+
     showMesh(){
         this.#scene.add(this.#mesh);
         if(this.#cloud_checkbox) this.showCloud();

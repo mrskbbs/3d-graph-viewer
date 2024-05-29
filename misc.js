@@ -32,17 +32,12 @@ export const FORMULADICT = {
 };
 
 //Parse lower and upper bounds for coords
-export function parseLowerUpperBounds(){
-    let lower = Number(document.querySelector("#lower").value);
-    let upper = Number(document.querySelector("#upper").value);
-
-    if(lower >= upper){
-        alert("Неверно введены границы!");
-        return;
-    }
+export function parseBounds(){
+    let bound = Math.round(Number(document.querySelector("#domain").value));
+    bound = (bound < 1) ? 1 : bound;
     return{
-        lower: lower,
-        upper: upper,
+        lower: -1*bound,
+        upper: bound,
     }
 }
 
@@ -54,7 +49,7 @@ export function elementBuilder(tag, options){
     return el;
 }
 
-export function materialBuilder(val){
+export function graphMaterialBuilder(val){
     return new th.MeshPhysicalMaterial({
         color: val,
         side: th.DoubleSide,
