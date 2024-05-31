@@ -1,5 +1,5 @@
-import * as th from 'three';
-import * as misc from '../misc.js';
+import * as th from "../node_modules/three/build/three.module.js";
+import * as misc from "../misc.js";
 export class Graph{
     #scene;
     #geometry;
@@ -48,7 +48,7 @@ export class Graph{
         );
         const mesh_label = document.createElement("label");
         mesh_label.appendChild(mesh_checkbox);
-        mesh_label.addEventListener('change', (el) => {
+        mesh_label.addEventListener("change", (el) => {
             if(el.target.checked){
                 this.showMesh();
                 this.#mesh_checkbox = true;
@@ -67,7 +67,7 @@ export class Graph{
         );
         const cloud_label = document.createElement("label");
         cloud_label.appendChild(cloud_checkbox);
-        cloud_label.addEventListener('change', (el) => {
+        cloud_label.addEventListener("change", (el) => {
             if(el.target.checked){
                 if(this.#mesh_checkbox) this.showCloud();
                 this.#cloud_checkbox = true;
@@ -206,7 +206,7 @@ export class Graph{
             
             //Geometry creation from vertices
             this.#geometry = new th.BufferGeometry();
-            this.#geometry.setAttribute('position', new th.BufferAttribute(vertices, 3));
+            this.#geometry.setAttribute("position", new th.BufferAttribute(vertices, 3));
             this.#geometry.setIndex(indices);
             this.#geometry.computeVertexNormals();
         
