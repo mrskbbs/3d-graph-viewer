@@ -101,18 +101,21 @@ export class Graph{
             "div",
             {"class": "vertical"}
         );
+
+        
+        
+        const formula_div = misc.elementBuilder(
+            "p",
+            {"class": "formula"}
+        );
+        formula_div.innerHTML = formula;
+
+        card.appendChild(colorpicker);
         container.appendChild(mesh_label);
         container.appendChild(cloud_label);
-
-
-        card.appendChild(delete_button);
         card.appendChild(container);
-        card.appendChild(colorpicker);
-
-
-        const formula_p = document.createElement("p");
-        formula_p.innerHTML = formula;
-        card.appendChild(formula_p);
+        card.appendChild(delete_button);
+        card.appendChild(formula_div);
 
         
         this.#card = card;
@@ -193,7 +196,7 @@ export class Graph{
         var formula = this.#parseFormula(formula_raw);
 
         if(formula == null || formula == ""){
-            alert(`Формула \"${formula_raw}\" была введена неверно!`);
+            alert(`Формула была введена неверно!`);
             this.#mesh = null;
             this.#cloud = null;
             this.#geometry = null;

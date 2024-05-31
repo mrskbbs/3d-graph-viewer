@@ -1,43 +1,44 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel = "stylesheet" href = "/index.css">
-        <meta charset = "utf-8">
+        <link rel = "stylesheet" href = "./index.css">
         <title>graphy</title> 
+        <meta charset = "utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     </head>
     <body>
-        <div id = "sidebar">
-        </div>
-        <div id = "graph-options">
-            <!-- Graph options -->
-            <div class = "vertical">
-                <label>
-                    Введите формулу f(x,y)
-                    <input id = "formula" type="text">
-                </label>
-                <label>
-                    Объём куба содержащего график
-                    <input id = "domain" type = "number" value = "10" min="1">
-                </label>
-                <button id = "add">Добавить</button>
-                <div class = "horizontal">
-                    <p>Плоскости: </p>
+        <div id = "ui">
+            <div id = "sidebar">
+            </div>
+            <div id = "graph-options">
+                <div class = "vertical">
                     <label>
-                        XY
-                        <input id = "plane-xy" type="checkbox">
+                        Введите формулу f(x,y)
+                        <input id = "formula" type="text">
                     </label>
                     <label>
-                        XZ
-                        <input id = "plane-xz" type="checkbox">
+                        Объём куба содержащего график
+                        <input id = "domain" type = "number" value = "10" min="1">
                     </label>
-                    <label>
-                        YZ
-                        <input id = "plane-yz" type="checkbox">
-                    </label>
+                    <button id = "add">Добавить</button>
+                    <div class = "horizontal">
+                        <p>Плоскости: </p>
+                        <label>
+                            XY
+                            <input id = "plane-xy" type="checkbox">
+                        </label>
+                        <label>
+                            XZ
+                            <input id = "plane-xz" type="checkbox">
+                        </label>
+                        <label>
+                            YZ
+                            <input id = "plane-yz" type="checkbox">
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
         <div id = "renderer"></div>
-        <script type = "module" src = "/main.js"></script>
+        <script type = "module" src = "./main.js"></script>
     </body>
 </html>

@@ -5,12 +5,14 @@
 body{
     user-select: none;
     font-family: "Roboto";
+    font-size: small;
     color: white;
     margin: 0em;
-    overflow-y: hidden;
+    overflow: hidden;
     display: flex;
     flex-direction: row;
     gap: 0em;
+    touch-action: none;
 }
 .vertical{
     display: flex;
@@ -52,6 +54,9 @@ input{
     transition: .5s;
 }
 label{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: .5s;
 }
 label:hover{
@@ -67,13 +72,19 @@ input[type="number"]{
 input[type="number"]:hover{
     -moz-appearance: textfield;
 }
-#graph-options{
+#ui{
     z-index: 1;
-    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     position: absolute;
-    width: 20%;
-    right: 0.5em;
-    bottom: 0em;
+    min-width: 15%;
+    top: 0em;
+    left: 1em;
+    height: 100%;
+}
+#graph-options{
+    color: white;
 }
 #graph-options label{
     display: flex;
@@ -82,6 +93,8 @@ input[type="number"]:hover{
     align-items: center;
 }
 .graph-controls{
+    position: relative;
+    direction: ltr;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -92,6 +105,9 @@ input[type="number"]:hover{
     border-radius: 0.5em;
     transition: .5s;
 }
+.graph-controls label{
+    width: max-content;
+}
 .graph-controls:hover{
     border-color: rgb(118, 175, 208);
 }
@@ -99,12 +115,32 @@ input[type="number"]:hover{
     width: 1.5em;
     height: 1.5em;
 }
+.formula{
+    z-index: 2;
+    position: absolute;
+    top: -20%;
+    background-color: white;
+    color: black;
+    padding: .1em;
+    border-radius: .2em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 80%;
+    transition: .5s;
+}
+.graph-controls:hover .formula{
+    background-color: rgb(118, 175, 208);
+    
+}
+.formula:hover{
+    height: max-content;
+    word-break: break-all;
+    white-space: normal;
+}
 #sidebar{
-    z-index: 1;
     top: 0em;
     left: 0em;
-    min-width: 15%;
-    height: 90vh;
+    height: 70%;
     background-color: rgba(0, 0, 0, 0);
     display: flex;
     flex-direction: column;
@@ -114,12 +150,67 @@ input[type="number"]:hover{
     scrollbar-color: white rgba(0, 0, 0, 0%);
     gap: 2em;
     padding: 2em;
-    font-size: small;
-    transition: 1.5s;
+    transition: .5s;
 }
 #renderer{
     z-index: 0;
     position: absolute;
     top: 0em;
     left: 0em;
+}
+
+@media only screen and (orientation: portrait) and (max-height: 800px) and (max-width: 400px){
+    body{
+        font-size: .5em;
+    }
+    input{
+        font-size: .5em;
+    }
+    input[type="checkbox"]{
+        width: 2em;
+    }
+    #ui{
+        max-width: 35%;
+    }
+    button{
+        font-size: .5em;
+    }
+    label{
+        font-size: 0.5em;
+    }
+    #sidebar{
+        max-width: 50%;
+    }
+    .graph-controls{
+        flex-direction: column;
+        justify-content: space-between;
+        padding: .5em;
+        gap: 0.5em;
+    }
+    .formula{
+        top: -22%;
+    }
+}
+@media only screen and (orientation: landscape) and (max-height: 400px) and (max-width: 800px){
+    body{
+        font-size: .5em;
+    }
+    input{
+        font-size: .5em;
+    }
+    input[type="checkbox"]{
+        width: 1.75em;
+    }
+    #ui{
+        max-width: 30%;
+    }
+    label{
+        font-size: 1em;
+    }
+    button{
+        font-size: .5em;
+    }
+    .graph-controls{
+        padding: 0.5em;
+    }
 }

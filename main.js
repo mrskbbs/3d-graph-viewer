@@ -22,8 +22,8 @@ function showPlanes(){
     }
 }
 
-const WIDTH = window.innerWidth;
-const HEIGHT = window.innerHeight;
+var WIDTH = window.innerWidth;
+var HEIGHT = window.innerHeight;
 
 //Camera and scene setup
 const scene = new th.Scene();
@@ -40,11 +40,21 @@ camera.position.z = 10;
 camera.rotateY(Math.PI/3);
 camera.rotateX(Math.PI/3);
 
+
 //Renderer setup
 const renderer = new th.WebGLRenderer();
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = th.PCFSoftShadowMap;
 renderer.setSize(WIDTH, HEIGHT);
+
+
+window.onresize = () => {
+    WIDTH = window.innerWidth;
+    HEIGHT = window.innerHeight;
+    camera.aspect = WIDTH/HEIGHT;
+    camera.updateProjectionMatrix();
+    renderer.setSize(WIDTH, HEIGHT);
+};
 
 
 //Light setup
