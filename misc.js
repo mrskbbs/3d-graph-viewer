@@ -1,4 +1,4 @@
-import * as th from "./node_modules/three/build/three.module.js";
+import * as th from "https://unpkg.com/browse/three@0.164.1/build/three.module.js";
 
 //Materials
 export const pointsmaterial = new th.PointsMaterial({
