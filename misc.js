@@ -1,4 +1,8 @@
+<<<<<<< HEAD:misc.js
 import * as th from "https://unpkg.com/browse/three@0.164.1/build/three.module.js";
+=======
+import * as th from "../node_modules/three/build/three.module.js";
+>>>>>>> da6204240f1a8c1bd0067a2acacea12b018f1668:dist/misc.js
 
 //Materials
 export const pointsmaterial = new th.PointsMaterial({
