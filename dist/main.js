@@ -1,7 +1,7 @@
-import * as th from "./node_modules/three/build/three.module.js";
-import {OrbitControls} from "./node_modules/three/examples/jsm/Addons.js";
-import { Graph } from "./classes/graph.js";
-import { Plane } from "./classes/plane.js";
+import * as th from "../node_modules/three/build/three.module.js";
+import {OrbitControls} from "../node_modules/three/examples/jsm/Addons.js";
+import { Graph } from "../dist/classes/graph.js";
+import { Plane } from "../dist/classes/plane.js";
 
 //Display loop
 function animate(){
