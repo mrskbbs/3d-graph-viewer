@@ -33,7 +33,7 @@ export const FORMULADICT = {
 
 //Parse lower and upper bounds for coords
 export function parseBounds(){
-    let bound = Math.round(Number(document.querySelector("#domain").value));
+    var bound = Math.round(Number(document.querySelector("#domain").value));
     bound = (bound < 1) ? 1 : bound;
     return{
         lower: -1*bound,
@@ -47,11 +47,4 @@ export function elementBuilder(tag, options){
         el.setAttribute(key, val);
     }
     return el;
-}
-
-export function graphMaterialBuilder(val){
-    return new th.MeshPhysicalMaterial({
-        color: val,
-        side: th.DoubleSide,
-    });
 }

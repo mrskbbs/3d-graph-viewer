@@ -1,7 +1,7 @@
 import * as th from 'three';
 import {OrbitControls} from 'three/examples/jsm/Addons.js';
-import { Graph } from './graph.js';
-import { Plane } from './plane.js';
+import { Graph } from './classes/graph.js';
+import { Plane } from './classes/plane.js';
 
 //Display loop
 function animate(){
@@ -9,6 +9,7 @@ function animate(){
     renderer.render(scene, camera);
 }
 
+//Render visible planes
 function showPlanes(){
     if(plane_xy.isChecked()){
         plane_xy.show();
@@ -45,7 +46,20 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = th.PCFSoftShadowMap;
 renderer.setSize(WIDTH, HEIGHT);
 
-//Camera controls
+
+//Light setup
+const ambient_light = new th.AmbientLight("#919191"); 
+scene.add( ambient_light );
+
+const top_light = new th.DirectionalLight(0xffffff, .6);
+top_light.position.z = 30;
+scene.add(top_light);
+
+const bottom_light = new th.DirectionalLight(0xffffff, .6);
+bottom_light.position.z = -30;
+scene.add(bottom_light)
+
+//Camera controls setup
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
@@ -57,20 +71,15 @@ let plane_yz = new Plane(scene, "yz");
 showPlanes();
 scene.add(axes);
 
-const ambient_light = new th.AmbientLight("#919191"); 
-scene.add( ambient_light );
-
-const directonal_light = new th.DirectionalLight(0xffffff, .6);
-directonal_light.position.z = 20;
-scene.add(directonal_light);
-
 //Init grapgh
 let graph = undefined;
 
+//Renderer init
 const DOM_renderer = document.querySelector("#renderer");
 DOM_renderer.appendChild(renderer.domElement);
 animate(scene, camera, renderer);
 
+//Update domain planes dynamically
 document.querySelector("#domain").addEventListener("change", () => {
     plane_xy.del();
     plane_xy = new Plane(scene, "xy");

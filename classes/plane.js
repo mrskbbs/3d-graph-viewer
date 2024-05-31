@@ -1,16 +1,17 @@
 import * as th from "three";
-import * as misc from "./misc.js";
+import * as misc from "../misc.js";
 export class Plane{
     #lines = [];
     #scene;
     #checkbox;
     
+    //Automatic creation of plane geometry
     #constructGeometry(orient){
         this.#lines = [];
         const bounds = misc.parseBounds();
         
-        let x = 0, y = 0, z = 0;
-        let x1 = 0, y1 = 0, z1 = 0;
+        var x = 0, y = 0, z = 0;
+        var x1 = 0, y1 = 0, z1 = 0;
 
 
         for(var i = bounds.lower; i <= bounds.upper; i++){

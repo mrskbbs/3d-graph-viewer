@@ -1,5 +1,5 @@
 import * as th from 'three';
-import * as misc from './misc.js';
+import * as misc from '../misc.js';
 export class Graph{
     #scene;
     #geometry;
@@ -23,14 +23,14 @@ export class Graph{
         try{
             z = eval(input);
         }catch{
-            alert(`Формула \"${input}\" была введена неверно!`);
             return null;
         }
         
         return input;
     }
 
-    #addToSideBar(){
+    //Add the graph card to the ui sidebar
+    #addToSideBar(formula){
         const card = misc.elementBuilder(
             "div",
             {"class": "graph-controls", }
@@ -109,22 +109,18 @@ export class Graph{
         card.appendChild(container);
         card.appendChild(colorpicker);
 
+
+        const formula_p = document.createElement("p");
+        formula_p.innerHTML = formula;
+        card.appendChild(formula_p);
+
+        
         this.#card = card;
         document.querySelector("#sidebar").appendChild(this.#card);
     }
 
-    constructor(scene){
-        this.#scene = scene;
-
-        //Formula parsing logic
-        var formula_raw = document.querySelector("#formula").value.trim().toLowerCase();
-        var formula = this.#parseFormula(formula_raw);
-        if(formula == null || formula == ""){
-            this.#mesh = null;
-            this.#cloud = null;
-            this.#geometry = null;
-        }
-        
+    //A lot of math in order to create a mesh
+    #constructGeometry(formula){
         const bounds = misc.parseBounds();
         const points = [];
         const points_raw = [];
@@ -132,13 +128,6 @@ export class Graph{
         var ROW = (bounds.upper+1) - bounds.lower;
         var TOTAL = ROW*ROW;
         var x = 0, y = 0, z = 0;
-
-        
-        //Display the card
-        this.#addToSideBar();
-        const p = document.createElement("p");
-        p.innerHTML = document.querySelector("#formula").value.toLowerCase();
-        this.#card.appendChild(p);
 
         //Calculates point coordinates depending on the given function
         for(var y = bounds.lower; y <= bounds.upper; y++){
@@ -168,11 +157,11 @@ export class Graph{
                 var cur = x + (y*ROW);
                 var clm = cur + 1;
                 var row = x + ((y+1)*ROW);
-                
+
                 const isOverBounds = (ind) =>{
                     return Math.abs(points[ind][2]) == bounds.upper;
                 }
-                
+
                 //Triangle check
                 if((isOverBounds(cur) + isOverBounds(clm) + isOverBounds(row)) < 3){
                     indices.push(cur, clm, row);
@@ -189,31 +178,53 @@ export class Graph{
                 }
             }
         }     
-        const vertices = new Float32Array(points_raw);
-    
-        //Geometry creation from vertices
-        this.#geometry = new th.BufferGeometry();
-        this.#geometry.setAttribute('position', new th.BufferAttribute(vertices, 3));
-        this.#geometry.setIndex(indices);
-        this.#geometry.computeVertexNormals();
-    
-        // Create mesh and clouds
-        this.#mesh = new th.Mesh(
-            this.#geometry, 
-            new th.MeshPhysicalMaterial({
-                color: "#FFFFFF",
-                side: th.DoubleSide,
-            })
-        );
-        this.#cloud = new th.Points(
-            this.#geometry,
-            new th.PointsMaterial({
-                color: "#FFFFFF",
-                size: 5,
-                sizeAttenuation: false,
-            }) 
-        );
-        this.showMesh();
+
+        return [
+            new Float32Array(points_raw),
+            indices,
+        ]
+    }
+
+    constructor(scene){
+        this.#scene = scene;
+
+        //Formula parsing logic
+        var formula_raw = document.querySelector("#formula").value.trim().toLowerCase();
+        var formula = this.#parseFormula(formula_raw);
+
+        if(formula == null || formula == ""){
+            alert(`Формула \"${formula_raw}\" была введена неверно!`);
+            this.#mesh = null;
+            this.#cloud = null;
+            this.#geometry = null;
+        }else{
+            this.#addToSideBar(formula_raw);
+            const [vertices, indices] = this.#constructGeometry(formula);
+            
+            //Geometry creation from vertices
+            this.#geometry = new th.BufferGeometry();
+            this.#geometry.setAttribute('position', new th.BufferAttribute(vertices, 3));
+            this.#geometry.setIndex(indices);
+            this.#geometry.computeVertexNormals();
+        
+            // Create mesh and clouds
+            this.#mesh = new th.Mesh(
+                this.#geometry, 
+                new th.MeshPhysicalMaterial({
+                    color: "#FFFFFF",
+                    side: th.DoubleSide,
+                })
+            );
+            this.#cloud = new th.Points(
+                this.#geometry,
+                new th.PointsMaterial({
+                    color: "#FFFFFF",
+                    size: 5,
+                    sizeAttenuation: false,
+                }) 
+            );
+            this.showMesh();
+        }
     }
 
     showMesh(){
