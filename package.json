@@ -1,11 +1,12 @@
 {
   "dependencies": {
-    "@seregpie/three.text-sprite": "^3.2.0",
-    "gh-pages": "^6.1.1",
-    "three": "^0.164.1",
-    "three-subdivide": "^1.1.5"
+    "three": "^0.164.1"
   },
   "devDependencies": {
     "vite": "^5.2.11"
+  },
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview"
   }
 }

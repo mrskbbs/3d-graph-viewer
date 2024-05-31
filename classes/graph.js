@@ -1,4 +1,4 @@
-import * as th from "https://unpkg.com/browse/three@0.164.1/build/three.module.js";
+import * as th from "three";
 import * as misc from "../misc.js";
 export class Graph{
     #scene;
@@ -19,11 +19,14 @@ export class Graph{
         }
 
         //Error validation
-        var x = 0, y = 0, z = 0;
         try{
-            z = eval(input);
-        }catch{
-            return null;
+            const x = 0, y = 0;
+            eval(input);
+            console.log(x, y);
+        }catch (e){
+            if(e instanceof EvalError){
+                return null;
+            }
         }
         
         return input;
@@ -194,7 +197,7 @@ export class Graph{
         //Formula parsing logic
         var formula_raw = document.querySelector("#formula").value.trim().toLowerCase();
         var formula = this.#parseFormula(formula_raw);
-
+        console.log(formula_raw, formula);
         if(formula == null || formula == ""){
             alert(`Формула была введена неверно!`);
             this.#mesh = null;

@@ -1,5 +1,5 @@
-import * as th from "https://unpkg.com/browse/three@0.164.1/build/three.module.js";
-import {OrbitControls} from "https://unpkg.com/browse/three@0.164.1/examples/jsm/Addons.js";
+import * as th from "three";
+import {OrbitControls} from "three/addons";
 import { Graph } from "./classes/graph.js";
 import { Plane } from "./classes/plane.js";
 
