@@ -14,7 +14,7 @@ export class Graph{
 
     //Parse formula and edit it to suit JS syntax
     #parseFormula(input){
-        for(var [key, val] of Object.entries(misc.FORMULADICT)){
+        for(let [key, val] of Object.entries(misc.FORMULADICT)){
            input = input.replaceAll(key, val);
         }
 
@@ -129,13 +129,13 @@ export class Graph{
         const points = [];
         const points_raw = [];
         const indices = [];
-        var ROW = (bounds.upper+1) - bounds.lower;
-        var TOTAL = ROW*ROW;
-        var x = 0, y = 0, z = 0;
+        let ROW = (bounds.upper+1) - bounds.lower;
+        let TOTAL = ROW*ROW;
+        let x = 0, y = 0, z = 0;
 
         //Calculates point coordinates depending on the given function
-        for(var y = bounds.lower; y <= bounds.upper; y++){
-            for(var x = bounds.lower; x <= bounds.upper; x++){
+        for(let y = bounds.lower; y <= bounds.upper; y++){
+            for(let x = bounds.lower; x <= bounds.upper; x++){
                 z = eval(formula);
                 if(z > bounds.upper ){
                     points.push([x,y, bounds.upper]);
@@ -155,12 +155,12 @@ export class Graph{
         }
 
         //Builds triangle indices order from cloud of points
-        for(var y = 0; y < (TOTAL/(ROW))-1; y++){
-            for(var x = 0; x < ROW-1; x++){
+        for(let y = 0; y < (TOTAL/(ROW))-1; y++){
+            for(let x = 0; x < ROW-1; x++){
                 //Indicies
-                var cur = x + (y*ROW);
-                var clm = cur + 1;
-                var row = x + ((y+1)*ROW);
+                let cur = x + (y*ROW);
+                let clm = cur + 1;
+                let row = x + ((y+1)*ROW);
 
                 const isOverBounds = (ind) =>{
                     return Math.abs(points[ind][2]) == bounds.upper;
@@ -198,8 +198,8 @@ export class Graph{
         this.#scene = scene;
 
         //Formula parsing logic
-        var formula_raw = document.querySelector("#formula").value.trim().toLowerCase();
-        var formula = this.#parseFormula(formula_raw);
+        let formula_raw = document.querySelector("#formula").value.trim().toLowerCase();
+        let formula = this.#parseFormula(formula_raw);
         console.log(formula_raw, formula);
         if(formula == null || formula == ""){
             alert(`Формула была введена неверно!`);

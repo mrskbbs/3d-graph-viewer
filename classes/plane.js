@@ -10,11 +10,11 @@ export class Plane{
         this.#lines = [];
         const bounds = misc.parseBounds();
         
-        var x = 0, y = 0, z = 0;
-        var x1 = 0, y1 = 0, z1 = 0;
+        let x = 0, y = 0, z = 0;
+        let x1 = 0, y1 = 0, z1 = 0;
 
 
-        for(var i = bounds.lower; i <= bounds.upper; i++){
+        for(let i = bounds.lower; i <= bounds.upper; i++){
             const points = [];
             const points1 = [];
             
@@ -96,17 +96,17 @@ export class Plane{
         return this.#checkbox.checked;
     }
     show(){
-        for(var el of this.#lines){
+        for(let el of this.#lines){
             this.#scene.add(el);
         }
     }
     hide(){
-        for(var el of this.#lines){
+        for(let el of this.#lines){
             this.#scene.remove(el);
         }
     }
     del(){
-        for(var el of this.#lines){
+        for(let el of this.#lines){
             el.geometry.dispose();
             this.#scene.remove(el);
             this.#lines = [];

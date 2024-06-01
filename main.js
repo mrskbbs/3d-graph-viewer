@@ -22,8 +22,8 @@ function showPlanes(){
     }
 }
 
-var WIDTH = window.innerWidth;
-var HEIGHT = window.innerHeight;
+let WIDTH = window.innerWidth;
+let HEIGHT = window.innerHeight;
 
 //Camera and scene setup
 const scene = new th.Scene();
