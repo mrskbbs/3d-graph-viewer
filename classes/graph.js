@@ -24,9 +24,7 @@ export class Graph{
             eval(input);
             console.log(x, y);
         }catch (e){
-            if(e instanceof EvalError){
-                return null;
-            }
+            return null;
         }
         
         return input;
@@ -184,11 +182,16 @@ export class Graph{
                 }
             }
         }     
-
-        return [
-            new Float32Array(points_raw),
-            indices,
-        ]
+        
+        //Geometry creation from vertices
+        this.#geometry = new th.BufferGeometry();
+        this.#geometry.setAttribute(
+            "position",
+            new th.BufferAttribute(new Float32Array(points_raw),
+            3
+        ));
+        this.#geometry.setIndex(indices);
+        this.#geometry.computeVertexNormals();
     }
 
     constructor(scene){
@@ -205,14 +208,8 @@ export class Graph{
             this.#geometry = null;
         }else{
             this.#addToSideBar(formula_raw);
-            const [vertices, indices] = this.#constructGeometry(formula);
+            this.#constructGeometry(formula);
             
-            //Geometry creation from vertices
-            this.#geometry = new th.BufferGeometry();
-            this.#geometry.setAttribute("position", new th.BufferAttribute(vertices, 3));
-            this.#geometry.setIndex(indices);
-            this.#geometry.computeVertexNormals();
-        
             // Create mesh and clouds
             this.#mesh = new th.Mesh(
                 this.#geometry, 
