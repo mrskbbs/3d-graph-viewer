@@ -126,11 +126,11 @@ export class Graph{
     //A lot of math in order to create a mesh
     #constructGeometry(formula){
         const bounds = misc.parseBounds();
+        const zcoords = [];
         const points = [];
-        const points_raw = [];
         const indices = [];
-        let ROW = (bounds.upper+1) - bounds.lower;
-        let TOTAL = ROW*ROW;
+        const ROW = (bounds.upper+1) - bounds.lower;
+        const TOTAL = ROW*ROW;
         let x = 0, y = 0, z = 0;
 
         //Calculates point coordinates depending on the given function
@@ -138,18 +138,18 @@ export class Graph{
             for(let x = bounds.lower; x <= bounds.upper; x++){
                 z = eval(formula);
                 if(z > bounds.upper ){
-                    points.push([x,y, bounds.upper]);
-                    points_raw.push(x,y, bounds.upper);
+                    zcoords.push(bounds.upper);
+                    points.push(x,y, bounds.upper);
                     continue;
                 } 
                 if(z < bounds.lower){
-                    points.push([x,y, bounds.lower]);
-                    points_raw.push(x,y, bounds.lower);
+                    zcoords.push(bounds.lower);
+                    points.push(x,y, bounds.lower);
                     continue;
                 }
                 if(z != NaN){
-                    points.push([x,y,z]);
-                    points_raw.push(x,y,z);
+                    zcoords.push(z);
+                    points.push(x,y,z);
                 }
             }
         }
@@ -163,7 +163,7 @@ export class Graph{
                 let row = x + ((y+1)*ROW);
 
                 const isOverBounds = (ind) =>{
-                    return Math.abs(points[ind][2]) == bounds.upper;
+                    return Math.abs(zcoords[ind]) == bounds.upper;
                 }
 
                 //Triangle check
@@ -187,7 +187,7 @@ export class Graph{
         this.#geometry = new th.BufferGeometry();
         this.#geometry.setAttribute(
             "position",
-            new th.BufferAttribute(new Float32Array(points_raw),
+            new th.BufferAttribute(new Float32Array(points),
             3
         ));
         this.#geometry.setIndex(indices);
