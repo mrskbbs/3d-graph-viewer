@@ -154,6 +154,11 @@ export class Graph{
             }
         }
 
+
+        const isOverBounds = (ind) =>{
+            return Math.abs(zcoords[ind]) == bounds.upper;
+        }
+
         //Builds triangle indices order from cloud of points
         for(let y = 0; y < (TOTAL/(ROW))-1; y++){
             for(let x = 0; x < ROW-1; x++){
@@ -161,10 +166,6 @@ export class Graph{
                 let cur = x + (y*ROW);
                 let clm = cur + 1;
                 let row = x + ((y+1)*ROW);
-
-                const isOverBounds = (ind) =>{
-                    return Math.abs(zcoords[ind]) == bounds.upper;
-                }
 
                 //Triangle check
                 if((isOverBounds(cur) + isOverBounds(clm) + isOverBounds(row)) < 3){
