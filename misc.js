@@ -1,21 +1,5 @@
 import * as th from "three";
 
-//Materials
-export const pointsmaterial = new th.PointsMaterial({
-    color: "white",
-    size: 5,
-    sizeAttenuation: false,
-});
-export const coordsmaterial = new th.LineBasicMaterial({
-    color: "white",
-    transparent: true,
-    opacity: 0.25,
-    side: th.DoubleSide,
-}); 
-export const normalmaterial = new th.MeshNormalMaterial({
-    side: th.DoubleSide
-});
-
 //Variables
 export const FORMULADICT = {
     "^" : "**",

@@ -12,8 +12,8 @@ export class Graph{
     
     #card;
 
-    //Parse formula and edit it to suit JS syntax
-    #parseFormula(input){
+    //Adjust formula to JS syntax
+    #adjustFormula(input){
         for(let [key, val] of Object.entries(misc.FORMULADICT)){
            input = input.replaceAll(key, val);
         }
@@ -126,7 +126,6 @@ export class Graph{
     //A lot of math in order to create a mesh
     #constructGeometry(formula){
         const bounds = misc.parseBounds();
-        const zcoords = [];
         const points = [];
         const indices = [];
         const ROW = (bounds.upper+1) - bounds.lower;
@@ -138,17 +137,14 @@ export class Graph{
             for(let x = bounds.lower; x <= bounds.upper; x++){
                 z = eval(formula);
                 if(z > bounds.upper ){
-                    zcoords.push(bounds.upper);
                     points.push(x,y, bounds.upper);
                     continue;
                 } 
                 if(z < bounds.lower){
-                    zcoords.push(bounds.lower);
                     points.push(x,y, bounds.lower);
                     continue;
                 }
                 if(z != NaN){
-                    zcoords.push(z);
                     points.push(x,y,z);
                 }
             }
@@ -156,7 +152,7 @@ export class Graph{
 
 
         const isOverBounds = (ind) =>{
-            return Math.abs(zcoords[ind]) == bounds.upper;
+            return Math.abs(points[ind*3+2]) >= bounds.upper;
         }
 
         //Builds triangle indices order from cloud of points
@@ -200,8 +196,7 @@ export class Graph{
 
         //Formula parsing logic
         let formula_raw = document.querySelector("#formula").value.trim().toLowerCase();
-        let formula = this.#parseFormula(formula_raw);
-        console.log(formula_raw, formula);
+        let formula = this.#adjustFormula(formula_raw);
         if(formula == null || formula == ""){
             alert(`Формула была введена неверно!`);
             this.#mesh = null;
